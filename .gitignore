@@ -1,0 +1,14 @@
+# Node.js dependencies
+node_modules/
+.env
+package-lock.json
+pnpm-lock.yaml
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# IDE & System Files
+.vscode/
+.DS_Store
