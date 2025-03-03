@@ -43,27 +43,25 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
+
+    // ✅ Check if the user exists
     const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ error: "User not found" });
+    if (!user) {
+      return res.status(400).json({ error: "User not found!" });
+    }
 
+    // ✅ Compare hashed password
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ error: "Invalid credentials" });
+    if (!isMatch) {
+      return res.status(400).json({ error: "Incorrect password!" });
+    }
 
-    // Generate JWT Token with User Role
-    const token = jwt.sign(
-      { id: user._id, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
-    );
+    // ✅ Generate JWT token
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
-    res.cookie("token", token, {
-      httpOnly: true,  // Prevent XSS attacks
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "Strict",
-    });
-
-    res.json({ token, user: { _id: user._id, name: user.name, email: user.email, role: user.role } });
+    res.status(200).json({ user, token }); // ✅ Send correct response
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
