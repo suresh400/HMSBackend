@@ -10,7 +10,7 @@ import { authenticate } from './src/middleware/authMiddleware.js';
 dotenv.config();
 const app = express();
 
-app.use(cors({origin: ["https://hmsy.vercel.app/"],
+app.use(cors({origin: ["https://hmsy-git-main-suresh400s-projects.vercel.app/"],
     methods: ["POST","GET","PUT","DELETE"],
     credentials: true }));
 app.use(express.json());
